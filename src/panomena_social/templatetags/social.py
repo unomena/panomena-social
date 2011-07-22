@@ -24,7 +24,7 @@ class LikeNode(template.Node):
         # resolve the arguments
         obj = self.obj.resolve(context)
         template = self.template.resolve(context)
-        # render the template
+        # cehck if the object is liked
         liked = False
         if hasattr(obj, 'is_liked'):
             liked = obj.is_liked(request)
