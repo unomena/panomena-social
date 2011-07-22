@@ -25,7 +25,8 @@ def like(request, content_type, pk):
             'likes': like_count(obj),
         })
     else:
-        next_url = request.REQUEST.get('next', '/')
+        next_url = request.REQUEST.get('next') or \
+            request.META.get('HTTP_REFERER') or '/'
         return redirect(next_url)
 
 
@@ -52,6 +53,7 @@ def unlike(request, content_type, pk):
             'likes': like_count(obj),
         })
     else:
-        next_url = request.REQUEST.get('next', '/')
+        next_url = request.REQUEST.get('next') or \
+            request.META.get('HTTP_REFERER') or '/'
         return redirect(next_url)
 
