@@ -23,6 +23,15 @@ def is_liked(self, request):
         return False
 
 
+def like_count(self):
+    """Returns the amount of likes the object has."""
+    content_type = ContentType.objects.get_for_model(self)
+    return Like.objects.filter(
+        content_type=content_type,
+        object_pk=self.pk,
+    ).count()
+
+
 class Like(models.Model):
     """Model that represents a user liking an object."""
 
