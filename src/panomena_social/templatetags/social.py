@@ -25,6 +25,7 @@ class LikeNode(template.Node):
         obj = self.obj.resolve(context)
         template = self.template.resolve(context)
         # render the template
+        liked = False
         if hasattr(obj, 'is_liked'):
             liked = obj.is_liked(request)
         # get the content type of the object
