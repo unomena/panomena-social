@@ -4,6 +4,25 @@ from django.contrib.contenttypes import generic
 from django.contrib.contenttypes.models import ContentType
 
 
+def is_liked(self, request):
+    """Determines if an object has been liked by a user."""
+    user = request.user
+    # unauthenticated users cannot like
+    if not user.is_authenticated():
+        return False
+    # attempt to find like object
+    try:
+        content_type = ContentType.objects.get_for_model(self)
+        Like.objects.get(
+            user=request.user,
+            object_pk=self.pk,
+            content_type=content_type,
+        )
+        return True
+    except Like.DoesNotExist:
+        return False
+
+
 class Like(models.Model):
     """Model that represents a user liking an object."""
 
