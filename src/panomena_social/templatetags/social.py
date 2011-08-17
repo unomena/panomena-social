@@ -40,7 +40,7 @@ class LikeNode(template.Node):
             'content_type': content_type,
             'liked': liked,
             'can_like': can_like,
-        })
+        }, context_instance=context)
 
 
 @register.tag
