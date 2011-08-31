@@ -1,5 +1,5 @@
 from django import template
-from django.template import TemplateSyntaxError
+from django.template import TemplateSyntaxError, RequestContext
 from django.template.loader import render_to_string
 from django.contrib.contenttypes.models import ContentType
 
@@ -35,12 +35,13 @@ class LikeNode(template.Node):
         # get the content type of the object
         content_type = ContentType.objects.get_for_model(obj)
         # build context and render template
-        return render_to_string(template, {
+        tag_context = RequestContext(request, {
             'object': obj,
             'content_type': content_type,
             'liked': liked,
             'can_like': can_like,
-        }, context_instance=context)
+        })
+        return render_to_string(template, tag_context)
 
 
 @register.tag
