@@ -16,6 +16,6 @@ setup(
     install_requires = [
         'Django==1.2.5',
         'panomena-general==0.0.1',
-        'panomena-accounts==0.0.1',
+        'panomena-accounts==0.0.2',
     ],
 )
