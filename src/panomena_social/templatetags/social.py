@@ -25,6 +25,9 @@ class LikeNode(template.Node):
         # resolve the arguments
         obj = self.obj.resolve(context)
         template = self.template.resolve(context)
+        # get the leaf class of the object
+        if hasattr(obj, 'as_leaf_class'):
+            obj = obj.as_leaf_class()
         # check if the object is liked
         if hasattr(obj, 'is_liked'):
             liked = obj.is_liked(request)
