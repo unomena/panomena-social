@@ -1,3 +1,4 @@
+from django.conf import settings
 from django.shortcuts import redirect, get_object_or_404
 
 from panomena_general.utils import is_ajax_request, json_response, \
@@ -9,8 +10,13 @@ from panomena_social.models import Like, like_count
 def like(request, content_type, pk):
     """Indicate that a user likes a content object."""
     user = request.user
-    content_type = get_content_type(content_type)
+    referer = request.META.get('HTTP_REFERER')
+    # check if the user is authenticated
+    if not user.is_authenticated():
+        login_url = settings.LOGIN_URL + '?next=%s' % referer
+        return redirect(login_url)
     # attempt to get the object
+    content_type = get_content_type(content_type)
     obj = get_object_or_404(content_type.model_class(), pk=pk)
     # create the like
     like, created = Like.objects.get_or_create(
@@ -25,8 +31,7 @@ def like(request, content_type, pk):
             'likes': like_count(obj),
         })
     else:
-        next_url = request.REQUEST.get('next') or \
-            request.META.get('HTTP_REFERER') or '/'
+        next_url = request.REQUEST.get('next') or referer or '/'
         return redirect(next_url)
 
 
