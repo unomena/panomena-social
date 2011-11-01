@@ -18,6 +18,7 @@ class LikeNode(template.Node):
 
     def render(self, context):
         liked = False
+        can_like = True
         # get the request object
         request = context.get('request', None)
         if request is None:
@@ -33,8 +34,6 @@ class LikeNode(template.Node):
             liked = obj.is_liked(request)
         else:
             can_like = False
-        # disable liking for unauthenticated users
-        can_like = request.user.is_authenticated()
         # get the content type of the object
         content_type = ContentType.objects.get_for_model(obj)
         # build context and render template

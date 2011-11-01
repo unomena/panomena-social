@@ -4,6 +4,7 @@ from panomena_general.utils import is_ajax_request, json_response, \
     get_content_type
 
 from panomena_social.models import Like, like_count
+from panomena_social.utils import generate_token
 
 
 def like(request, content_type, pk):
@@ -12,9 +13,12 @@ def like(request, content_type, pk):
     content_type = get_content_type(content_type)
     # attempt to get the object
     obj = get_object_or_404(content_type.model_class(), pk=pk)
+    # generate a token to identify the voting client
+    token = generate_token(request)
     # create the like
     like, created = Like.objects.get_or_create(
-        user=user,
+        user=user if user.is_authenticated() else None,
+        token=token,
         object_pk=pk,
         content_type=content_type,
     )
@@ -39,11 +43,20 @@ def unlike(request, content_type, pk):
     obj = get_object_or_404(content_type.model_class(), pk=pk)
     # attempt to delete the like
     try:
-        Like.objects.get(
-            user=user,
-            object_pk=pk,
-            content_type=content_type,
-        ).delete()
+        if user.is_authenticated():
+            # delete the like attached to the user
+            Like.objects.filter(
+                user=user,
+                object_pk=pk,
+                content_type=content_type,
+            ).delete()
+        else:
+            # delete the like attached to the terminal token
+            Like.objects.filter(
+                token=generate_token(request),
+                object_pk=pk,
+                content_type=content_type,
+            ).delete()
     except Like.DoesNotExist:
         success = False
     # respond to the request
