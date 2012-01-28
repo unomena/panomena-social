@@ -3,7 +3,7 @@ from setuptools import setup, find_packages
 setup(
     name='panomena-social',
     description='Panomena Social',
-    version='0.0.3',
+    version='0.0.4',
     author='',
     license='Proprietory',
     url='http://www.unomena.com/',
@@ -14,8 +14,8 @@ setup(
         'http://github.com/unomena/panomena-accounts/tarball/master#egg=panomena-accounts',
     ],
     install_requires = [
-        'Django==1.2.5',
-        'panomena-general==0.0.1',
-        'panomena-accounts==0.0.2',
+        'Django',
+        'panomena-general==0.0.3',
+        'panomena-accounts==0.0.5',
     ],
 )
